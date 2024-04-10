@@ -61,7 +61,7 @@ class Travel(models.Model):
 
     def get_similarity(self,k=5):
         # 获取5个最相似的景点的id
-        similarity_travels=self.travel_travel.all()[:k]
+        similarity_travels=self.travel_similarity.all()[:k]
         print(similarity_travels)
         return similarity_travels
 
