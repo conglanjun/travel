@@ -20,8 +20,8 @@
             word-wrap: break-word;
         }
         .stravel{
-            display: block;
-            float: left;
+            display: inline-block;
+            {% comment %} float: left; {% endcomment %}
             font-size: 15px;
             text-align: center;
             margin:0 5px 10px 5px;
@@ -63,12 +63,12 @@
             <p>详情：{{ travel.intro }}</p>
             <p>
                 类型：
-                {% for genre in travel.get_genre %}
+                {% comment %} {% for genre in travel.get_genre %}
                     <a href="{% url 'travel:tag' %}?genre={{ genre }}">{{ genre }}</a>
                     {% if not forloop.last %}
                         <span>|</span>
                     {% endif %}
-                {% endfor %}
+                {% endfor %} {% endcomment %}
             </p>
         </div>
     </div>
@@ -78,7 +78,7 @@
         <div class="alert alert-warning" role="alert">喜欢这个景点的人也喜欢...</div>
 
         {% for travel in similarity_travels %}
-            <div class="stravel" {% if forloop.first %} style="margin-left: -6px" {% endif %}>
+            <div class="stravel" style="margin-left: 10px">
                 <a href="{% url 'travel:detail' travel.pk %}" class="item">
                     <div class="poster_div">
                         <img src="/static/travel/poster/{{ travel.imdb_id }}.jpg" alt="">

@@ -59,7 +59,7 @@ class Travel(models.Model):
             genre_lst.append(dct['name'])
         return genre_lst
 
-    def get_similarity(self,k=5):
+    def get_similarity(self,k=6):
         # 获取5个最相似的景点的id
         similarity_travels=self.travel_similarity.all()[:k]
         print(similarity_travels)
