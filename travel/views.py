@@ -116,7 +116,7 @@ class TagView(ListView):
     def get_queryset(self):
         if 'genre' not in self.request.GET.dict().keys():
             travels = Travel.objects.all()
-            return travels[100:200]
+            return travels[:100]
         else:
             travels = Travel.objects.filter(genre__name=self.request.GET.dict()['genre'])
             print(travels)
@@ -393,8 +393,8 @@ class RecommendTravelView(ListView):
         super().__init__()
         # 最相似的20个用户
         self.K = 20
-        # 推荐出10本书
-        self.N = 10
+        # 推荐出5
+        self.N = 5
         # 存放当前用户评分过的景点querySet
         self.cur_user_travel_qs = None
 

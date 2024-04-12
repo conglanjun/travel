@@ -5,6 +5,8 @@ from django.core import validators
 
 class Genre(models.Model):
     name = models.CharField(max_length=100)
+    # country
+    displayName = models.CharField(max_length=256, blank=True)
 
     class Meta:
         db_table = 'genre'
@@ -53,10 +55,10 @@ class Travel(models.Model):
         return range(int(self.get_score()))
 
     def get_genre(self):
-        genre_dct = self.genre.all().values('name')
+        genre_dct = self.genre.all().values('name', 'displayName')
         genre_lst = []
         for dct in genre_dct.values():
-            genre_lst.append(dct['name'])
+            genre_lst.append(dct)
         return genre_lst
 
     def get_similarity(self,k=6):

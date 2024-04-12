@@ -26,31 +26,15 @@
     <div class="container">
         <ul class="nav nav-pills">
             <li role="presentation" class="active"><a href="#">类型</a></li>
-            <li role="presentation" class="Musical"><a href="{% url 'travel:tag' %}?genre=Musical">Musical</a></li>
-            <li role="presentation" class="War"><a href="{% url 'travel:tag' %}?genre=War">War</a></li>
-            <li role="presentation" class="Crime"><a href="{% url 'travel:tag' %}?genre=Crime">Crime</a></li>
-            <li role="presentation" class="Romance"><a href="{% url 'travel:tag' %}?genre=Romance">Romance</a></li>
-            <li role="presentation" class="Fantasy"><a href="{% url 'travel:tag' %}?genre=Fantasy">Fantasy</a></li>
-            <li role="presentation" class="Drama"><a href="{% url 'travel:tag' %}?genre=Drama">Drama</a></li>
-            <li role="presentation" class="Music"><a href="{% url 'travel:tag' %}?genre=Music">Music</a></li>
-            <li role="presentation" class="Sci-Fi"><a href="{% url 'travel:tag' %}?genre=Sci-Fi">Sci-Fi</a></li>
-            <li role="presentation" class="Action"><a href="{% url 'travel:tag' %}?genre=Action">Action</a></li>
-            <li role="presentation" class="Comedy"><a href="{% url 'travel:tag' %}?genre=Comedy">Comedy</a></li>
-            <li role="presentation" class="Biography"><a href="{% url 'travel:tag' %}?genre=Biography">Biography</a></li>
-            <li role="presentation" class="Musical"><a href="{% url 'travel:tag' %}?genre=Family">Family</a></li>
-            <li role="presentation" class="Horror"><a href="{% url 'travel:tag' %}?genre=Horror">Horror</a></li>
-            <li role="presentation" class="Short"><a href="{% url 'travel:tag' %}?genre=Short">Short</a></li>
-            <li role="presentation" class="Documentary"><a href="{% url 'travel:tag' %}?genre=Documentary">Documentary</a>
-            </li>
-            <li role="presentation" class="Film-Noir"><a href="{% url 'travel:tag' %}?genre=Film-Noir">Film-Noir</a></li>
-            <li role="presentation" class="Animation"><a href="{% url 'travel:tag' %}?genre=Animation">Animation</a></li>
-            <li role="presentation" class="Adventure"><a href="{% url 'travel:tag' %}?genre=Adventure">Adventure</a></li>
-            <li role="presentation" class="Mystery"><a href="{% url 'travel:tag' %}?genre=Mystery">Mystery</a></li>
-            <li role="presentation" class="News"><a href="{% url 'travel:tag' %}?genre=News">News</a></li>
-            <li role="presentation" class="Sport"><a href="{% url 'travel:tag' %}?genre=Sport">Sport</a></li>
-            <li role="presentation" class="History"><a href="{% url 'travel:tag' %}?genre=History">History</a></li>
-            <li role="presentation" class="Thriller"><a href="{% url 'travel:tag' %}?genre=Thriller">Thriller</a></li>
-            <li role="presentation" class="Western"><a href="{% url 'travel:tag' %}?genre=Western">Western</a></li>
+            <li role="presentation" class="city"><a href="{% url 'travel:tag' %}?genre=city">城市</a></li>
+            <li role="presentation" class="mountain"><a href="{% url 'travel:tag' %}?genre=mountain">山川</a></li>
+            <li role="presentation" class="beach"><a href="{% url 'travel:tag' %}?genre=beach">沙滩</a></li>
+            <li role="presentation" class="river"><a href="{% url 'travel:tag' %}?genre=river">湖泊河流</a></li>
+            <li role="presentation" class="island"><a href="{% url 'travel:tag' %}?genre=island">岛屿</a></li>
+            <li role="presentation" class="remain"><a href="{% url 'travel:tag' %}?genre=remain">遗迹</a></li>
+            <li role="presentation" class="desert"><a href="{% url 'travel:tag' %}?genre=desert">沙漠</a></li>
+            <li role="presentation" class="flower"><a href="{% url 'travel:tag' %}?genre=flower">赏花</a></li>
+            <li role="presentation" class="religion"><a href="{% url 'travel:tag' %}?genre=religion">宗教</a></li>
         </ul>
         {% if genre %}
             <div class="alert alert-info" role="alert">{{ genre }} 类型的景点：</div>
