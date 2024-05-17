@@ -59,12 +59,12 @@
             <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
         </form>
     </div> <!-- /container -->
-    <div class="container">
+    {% comment %} <div class="container">
 
         {% for message in messages %}
             {% if message.tags == 'info' %}
                 <div class="alert alert-info" role="alert">{{ message }}</div>
             {% endif %}
         {% endfor %}
-    </div>
+    </div> {% endcomment %}
 {% endblock %}

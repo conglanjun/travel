@@ -189,7 +189,7 @@
 <body>
 <div class="site-wrapper">
 
-    <div class="site-wrapper-inner" style="background-color: #055125">
+    <div class="site-wrapper-inner" style="background: url({% static 'travel/bg1.jpeg' %}); width:100%; height:100%;background-repeat:no-repeat;background-size:100%;">
 
         <div class="cover-container">
 
@@ -222,4 +222,24 @@
 </div>
 
 </body>
+<style>  
+    .bg {   
+        position:fixed;    
+        top:0;    
+        left:0;    
+        width:100%;    
+        height:100%;   
+    }   
+  
+    .bg_img {   
+        position:absolute;    
+        left:0;    
+        right:0;    
+        bottom:0;    
+        margin:auto;    
+        width:100%;   
+        height:100%;   
+        z-index:-1;   
+    }   
+</style>  
 </html>

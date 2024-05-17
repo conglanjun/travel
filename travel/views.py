@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db.models import Avg, Count, Max
 from django.http import HttpResponse, request
 from django.shortcuts import render, redirect, reverse
-from .forms import RegisterForm, LoginForm, CommentForm
+from .forms import RegisterForm, LoginForm, CommentForm, UserUpdateForm
 from django.views.generic import View, ListView, DetailView
 from .models import User, Travel, Genre, Travel_rating, Travel_similarity, Travel_hot
 
@@ -116,7 +116,7 @@ class TagView(ListView):
     def get_queryset(self):
         if 'genre' not in self.request.GET.dict().keys():
             travels = Travel.objects.all()
-            return travels[:100]
+            return travels[100:200]
         else:
             travels = Travel.objects.filter(genre__name=self.request.GET.dict()['genre'])
             print(travels)
@@ -167,7 +167,7 @@ class SearchView(ListView):
     page_kwarg = 'p'
 
     def get_queryset(self):
-        travels = Travel.objects.filter(name__icontains=self.request.GET.dict()['keyword'])
+        travels = Travel.objects.filter(country__icontains=self.request.GET.dict()['country'])
         print(travels)
         return travels
 
@@ -178,7 +178,7 @@ class SearchView(ListView):
         page_obj = context.get('page_obj')
         pagination_data = self.get_pagination_data(paginator, page_obj)
         context.update(pagination_data)
-        context.update({'keyword': self.request.GET.dict()['keyword']})
+        context.update({'country': self.request.GET.dict()['country']})
         return context
 
     def get_pagination_data(self, paginator, page_obj, around_count=2):
@@ -393,8 +393,8 @@ class RecommendTravelView(ListView):
         super().__init__()
         # 最相似的20个用户
         self.K = 20
-        # 推荐出5
-        self.N = 5
+        # 推荐出10本书
+        self.N = 10
         # 存放当前用户评分过的景点querySet
         self.cur_user_travel_qs = None
 
@@ -455,6 +455,130 @@ class RecommendTravelView(ListView):
         page_obj = context.get('page_obj')
         pagination_data = self.get_pagination_data(paginator, page_obj)
         context.update(pagination_data)
+        return context
+
+    def get_pagination_data(self, paginator, page_obj, around_count=2):
+        current_page = page_obj.number
+
+        if current_page <= around_count + 2:
+            left_pages = range(1, current_page)
+            left_has_more = False
+        else:
+            left_pages = range(current_page - around_count, current_page)
+            left_has_more = True
+
+        if current_page >= paginator.num_pages - around_count - 1:
+            right_pages = range(current_page + 1, paginator.num_pages + 1)
+            right_has_more = False
+        else:
+            right_pages = range(current_page + 1, current_page + 1 + around_count)
+            right_has_more = True
+        return {
+            'left_pages': left_pages,
+            'right_pages': right_pages,
+            'current_page': current_page,
+            'left_has_more': left_has_more,
+            'right_has_more': right_has_more
+        }
+
+
+class UserDetailView(DetailView):
+    '''人员详情页面'''
+    model = User
+    template_name = 'travel/user_update.html'
+    # 上下文对象的名称
+    context_object_name = 'user'
+
+    def get_context_data(self, **kwargs):
+        # 重写获取上下文方
+        context = super().get_context_data(**kwargs)
+
+        # 获得用户的pk
+        user_id = self.kwargs['pk']
+        user = User.objects.get(pk=user_id)
+        context.update({'user': user})
+
+        return context
+
+    # 接受评分表单,pk是当前用户的数据库主键id
+    def post(self, request, pk):
+        url = request.get_full_path()
+        form = UserUpdateForm(request.POST)
+        form.is_valid()
+        user = User.objects.filter(id=form.data.get('id')).first()
+        old_password = form.data.get('old_password')
+        if old_password and len(old_password) > 0:
+            if user.password != old_password:
+                messages.info(request, "输入原始密码不正确！!")
+                return redirect(reverse('travel:user'))
+            password_repeat = form.data.get('password_repeat')
+            if form.data.get('password') != password_repeat:
+                messages.info(request, '两次密码输入不一致！')
+                return redirect(reverse('travel:user'))
+        user = User.objects.filter(id=form.cleaned_data.get('id')).first()
+        name = form.data.get('name')
+        email = form.data.get('email')
+        user.name = name
+        user.email = email
+        print(name, email)
+        old_password = form.data.get('old_password')
+        if old_password and len(old_password) > 0:
+            # update password
+            password = form.data.get('password') 
+            user.password = password
+        user.save()
+        messages.info(request, "更新成功!")
+        return redirect(reverse('travel:user'))
+
+
+def delete_user(request, pk):
+    print(pk)
+    user = User.objects.get(pk=pk)
+    user.delete()
+    messages.info(request, f"删除记录成功！")
+    # 跳转回评分历史
+    return redirect(reverse('travel:user'))
+
+
+# 注册视图
+class UserUpdateView(View):
+    def get(self, request):
+        return render(request, 'travel/user_update.html')
+
+    def post(self, request):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            # 没毛病，保存
+            form.save()
+            return redirect(reverse('travel:index'))
+        else:
+            # 表单验证失败，重定向到注册页面
+            errors = form.get_errors()
+            for error in errors:
+                messages.info(request, error)
+            print(form.errors.get_json_data())
+            return redirect(reverse('travel:register'))
+
+
+class UserView(ListView):
+    model = User
+    template_name = 'travel/user.html'
+    paginate_by = 15
+    context_object_name = 'users'
+    ordering = 'id'
+    page_kwarg = 'p'
+
+    def get_queryset(self):
+        # 返回user
+        return User.objects.filter()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserView, self).get_context_data(*kwargs)
+        paginator = context.get('paginator')
+        page_obj = context.get('page_obj')
+        pagination_data = self.get_pagination_data(paginator, page_obj)
+        context.update(pagination_data)
+        # print(context)
         return context
 
     def get_pagination_data(self, paginator, page_obj, around_count=2):

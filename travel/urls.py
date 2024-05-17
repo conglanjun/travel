@@ -29,4 +29,10 @@ urlpatterns = [
     # 导入物品之间的相似度
     # path('calc_travel_similarity',views.calc_travel_similarity,name='calc_similarity')
 
+    # 人员
+    path('user', views.UserView.as_view(), name='user'),
+    # 人员更新页面
+    path('user_update/<int:pk>', views.UserDetailView.as_view(), name='user_update'),
+    # 人员删除
+    path('user_delete/<int:pk>', views.delete_user, name='delete_user'),
 ]
